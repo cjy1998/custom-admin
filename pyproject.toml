@@ -1,0 +1,8 @@
+[project]
+name = "rbac"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.9"
+dependencies = [
+    "django>=4.2.21",
+]
