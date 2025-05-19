@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 # views.py 新增部分
@@ -11,8 +12,12 @@ from rest_framework.viewsets import ModelViewSet
 from .models import User
 from .serializers import UserSerializer
 
-
+'''
+用户管理
+'''
+@extend_schema(tags=['用户管理'])
 class UserViewSet(ModelViewSet):
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     def get_serializer_context(self):

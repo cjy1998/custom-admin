@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
     'user',
     'role',
     'permission'
@@ -57,11 +58,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 REST_FRAMEWORK = {
-'DEFAULT_AUTHENTICATION_CLASSES': (
+ 'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
  'DEFAULT_PERMISSION_CLASSES': ['utils.permissions.CustomPermission'],
-
+ 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 AUTH_USER_MODEL = 'user.User'
 ROOT_URLCONF = 'rbac.urls'
@@ -96,7 +97,7 @@ DATABASES = {
         'PORT': '3306',
         'NAME': 'rbac_test',
         'USER': 'root',
-        'PASSWORD': 'cjy19980128',
+        'PASSWORD': 'Cjy19980128',
         # 数据库连接池配置，主要是为了节省连接数据库的开销，临时存储数据库连接对象
         'POOL_OPTIONS': {
             'POOL_SIZE': 10,
@@ -105,7 +106,17 @@ DATABASES = {
 
     }
 }
-
+# 自定义 OpenAPI 配置
+SPECTACULAR_SETTINGS = {
+    'TITLE': '项目 API',
+    'DESCRIPTION': '接口文档详细说明',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,  # 隐藏 Schema 信息
+    'VIEW_OVERRIDES': {
+        "rest_framework_simplejwt.views.TokenObtainPairView": "utils.schema_overrides.TokenObtainPairSchema",
+        "rest_framework_simplejwt.views.TokenRefreshView": "utils.schema_overrides.TokenRefreshSchema",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
