@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 import sys
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,11 +63,31 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
  'DEFAULT_PERMISSION_CLASSES': ['utils.permissions.CustomPermission'],
- 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+ 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+ 'DEFAULT_RENDERER_CLASSES': [
+        'utils.custom_json.CustomJSONRenderer',
+        # 如果还要支持其他格式，比如 Browsable API，则保留 DRF 默认的 renderer：
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+ 'DEFAULT_PAGINATION_CLASS': 'utils.pageNumberPagination.MyPageNumberPagination'
 }
 AUTH_USER_MODEL = 'user.User'
 ROOT_URLCONF = 'rbac.urls'
-
+# JWT 设置
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -97,7 +118,7 @@ DATABASES = {
         'PORT': '3306',
         'NAME': 'rbac_test',
         'USER': 'root',
-        'PASSWORD': 'Cjy19980128',
+        'PASSWORD': 'cjy19980128',
         # 数据库连接池配置，主要是为了节省连接数据库的开销，临时存储数据库连接对象
         'POOL_OPTIONS': {
             'POOL_SIZE': 10,
@@ -140,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'UTC'
 

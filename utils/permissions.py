@@ -25,7 +25,6 @@ class CustomPermission(permissions.BasePermission):
 
         # 获取用户所有 API 权限
         api_permissions = request.user.get_all_permissions().filter(type='api')
-        print(request.user.get_all_permissions().values())
         # 检查是否匹配任意一个 API 权限规则
         for perm in api_permissions:
             # 路径正则匹配（示例：^/api/users/.*）

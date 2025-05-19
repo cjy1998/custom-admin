@@ -49,3 +49,10 @@ class UserSerializer(serializers.ModelSerializer):
         if password:
             instance.set_password(password)
         return super().update(instance, validated_data)
+class UserLoginSerializer(serializers.Serializer):
+        username = serializers.CharField(required=True)
+        password = serializers.CharField(required=True, write_only=True)
+        roles = RoleSerializer(many=True, read_only=True)
+        class Meta:
+            model = User
+            fields = ['username', 'password', 'token', 'roles', 'permissions']
