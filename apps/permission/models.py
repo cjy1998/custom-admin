@@ -10,8 +10,8 @@ class Permission(models.Model):
     )
     """
     type_choices = (
-        ('api', '接口权限'),
-        ('button', '按钮权限')
+        ('api', '按钮权限'),
+        ('menu', '菜单权限')
     )
     name = models.CharField('权限名称', max_length=32)
     codename = models.CharField('权限代码', max_length=128, unique=True)

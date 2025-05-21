@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'user',
     'role',
-    'permission'
+    'permission',
+    'menu',
 ]
 
 MIDDLEWARE = [
