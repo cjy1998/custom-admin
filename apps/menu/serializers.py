@@ -5,20 +5,6 @@ from apps.permission.models import Permission
 
 
 class BaseMenuSerializer(serializers.ModelSerializer):
-    # # 添加可写权限字段（与模型字段分离）
-    # permissions_data = serializers.ListField(
-    #     child=serializers.DictField(),
-    #     write_only=True,
-    #     required=False,
-    #     help_text="权限列表（包含权限信息）"
-    # )
-    #
-    # # 保持原有权限字段为只读
-    # permissions = serializers.PrimaryKeyRelatedField(
-    #     many=True,
-    #     read_only=True
-    # )
-
     class Meta:
         model = Menu
         fields = '__all__'
@@ -55,27 +41,4 @@ class MenuItemSerializer(BaseMenuSerializer):
         self.Meta.model.objects.bulk_create(
             [self.Meta.model(parent=instance, **child) for child in children_data]
         )
-        return instance
-
-    def update(self, instance, validated_data):
-        permissions_data = validated_data.pop('permissions_data', None)
-        # ... 其他原有更新逻辑保持不变 ...
-
-        # 处理权限更新
-        if permissions_data is not None:
-            permissions = []
-            for perm_data in permissions_data:
-                perm, _ = Permission.objects.update_or_create(
-                    codename=perm_data['codename'],
-                    defaults={
-                        'name': perm_data['name'],
-                        'type': perm_data['type'],
-                        'method': perm_data.get('method'),
-                        'path': perm_data.get('path'),
-                        'description': perm_data.get('description')
-                    }
-                )
-                permissions.append(perm)
-            instance.permissions.set(permissions)
-
         return instance

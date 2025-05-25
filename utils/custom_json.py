@@ -3,27 +3,23 @@
 from rest_framework.renderers import JSONRenderer
 
 class CustomJSONRenderer(JSONRenderer):
-    """
-    把 DRF 所有输出都包装成：
-    {
-        "code": <HTTP 状态码>,
-        "message": "<状态文本或自定义>",
-        "data": <原始 data>
-    }
-    """
-
     def render(self, data, accepted_media_type=None, renderer_context=None):
-        response = renderer_context.get('response', None)
-        # 如果视图直接返回了错误，DRF 会把 data 放到 'detail' 键
-        if response is not None and response.exception:
+        response = renderer_context.get('response') if renderer_context else None
+        original_status = response.status_code if response else 0
+
+        # 强制所有响应使用 200 HTTP 状态码
+        if response:
+            response.status_code = 200
+
+        if response and response.exception:
             wrapper = {
-                'code': response.status_code,
-                'message': data.get('detail', 'error'),
+                'code': original_status,  # 保留原始错误码
+                'message': data.get('detail', '服务器异常' if original_status == 500 else 'error'),
                 'data': None
             }
         else:
             wrapper = {
-                'code': response.status_code if response else 0,
+                'code': original_status,
                 'message': 'success',
                 'data': data
             }

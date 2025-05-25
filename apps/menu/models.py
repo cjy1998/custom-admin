@@ -16,13 +16,6 @@ class Menu(models.Model):
     icon = models.CharField('菜单图标', max_length=32, null=True, blank=True)
     is_hidden = models.BooleanField('是否隐藏', default=False)
     description = models.TextField('描述', null=True, blank=True)
-    permissions = models.ManyToManyField(
-        Permission,
-        verbose_name='菜单权限',
-        blank=True,
-        related_name='menus',
-        help_text='菜单关联的权限'
-    )
     class Meta:
         ordering = ['order']
         verbose_name = '菜单'
